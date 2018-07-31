@@ -47,6 +47,7 @@ type responseRecorder struct {
 }
 
 func (rr *responseRecorder) WriteHeader(status int) {
+	rr.status = status
 	rr.ResponseWriter.WriteHeader(status)
 }
 
