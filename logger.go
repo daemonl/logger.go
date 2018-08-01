@@ -17,6 +17,11 @@ var logContextKey = struct{}{}
 var DefaultLogger = logrus.New()
 var DefaultFields = logrus.Fields{}
 
+func Setup(appName string, version string) {
+	DefaultFields["app-name"] = appName
+	DefaultFields["app-version"] = version
+}
+
 func FromContext(ctx context.Context) *logrus.Entry {
 	entry, ok := ctx.Value(logContextKey).(*logrus.Entry)
 	if !ok {
