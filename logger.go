@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"sort"
+	"strings"
 
 	"github.com/Sirupsen/logrus"
 )
@@ -39,6 +40,18 @@ func FromEnvironment() *logrus.Logger {
 	l := logrus.New()
 	if os.Getenv("VERBOSE") == "true" {
 		l.SetLevel(logrus.DebugLevel)
+	}
+
+	switch strings.ToLower(os.Getenv("LOG_LEVEL")) {
+	case "error":
+		l.SetLevel(logrus.ErrorLevel)
+	case "debug":
+		l.SetLevel(logrus.DebugLevel)
+	case "info":
+		l.SetLevel(logrus.InfoLevel)
+	case "fatal":
+		l.SetLevel(logrus.FatalLevel)
+	default:
 	}
 
 	switch os.Getenv("LOG_FORMAT") {
