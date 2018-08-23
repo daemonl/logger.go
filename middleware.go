@@ -12,6 +12,8 @@ func Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		begin := time.Now()
 
+		entry := logger.FromContext(ctx)
+
 		entry := New().WithFields(logrus.Fields{
 			"path":   req.URL.Path,
 			"method": req.Method,
@@ -37,7 +39,7 @@ func Middleware(next http.Handler) http.Handler {
 			"begin":           begin.Format(time.RFC3339),
 			"agent":           req.UserAgent(),
 			"referer":         req.Referer(),
-		}).Info("HTTP Request")
+		}).Info("HTTP Served Request")
 	})
 }
 
