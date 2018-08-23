@@ -13,10 +13,11 @@ func Middleware(next http.Handler) http.Handler {
 		begin := time.Now()
 
 		entry := FromContext(req.Context()).
-			WithFields(logrus.Fields{
+			WithField("serving", map[string]interface{}{
 				"path":   req.URL.Path,
 				"method": req.Method,
 				"query":  req.URL.Query(),
+				"host":   req.Host,
 			})
 
 		recorder := &responseRecorder{
@@ -32,7 +33,6 @@ func Middleware(next http.Handler) http.Handler {
 		}
 
 		entry.WithFields(logrus.Fields{
-			"host":            req.Host,
 			"statusCode":      recorder.status,
 			"durationSeconds": time.Now().Sub(begin).Seconds(),
 			"begin":           begin.Format(time.RFC3339),
