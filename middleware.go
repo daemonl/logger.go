@@ -12,13 +12,12 @@ func Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		begin := time.Now()
 
-		entry := logger.FromContext(ctx)
-
-		entry := New().WithFields(logrus.Fields{
-			"path":   req.URL.Path,
-			"method": req.Method,
-			"query":  req.URL.Query(),
-		})
+		entry := FromContext(req.Context()).
+			WithFields(logrus.Fields{
+				"path":   req.URL.Path,
+				"method": req.Method,
+				"query":  req.URL.Query(),
+			})
 
 		recorder := &responseRecorder{
 			status:         200,
