@@ -2,15 +2,18 @@ package logger
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 	"time"
-
-	"github.com/Sirupsen/logrus"
 )
 
 func Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		begin := time.Now()
+		requestIP, _, _ := net.SplitHostPort(req.RemoteAddr)
+		if forwarded := req.Header.Get("X-Forwarded-For"); forwarded != "" {
+			requestIP = forwarded
+		}
 
 		entry := FromContext(req.Context()).
 			WithField("serving", map[string]interface{}{
@@ -18,6 +21,7 @@ func Middleware(next http.Handler) http.Handler {
 				"method": req.Method,
 				"query":  req.URL.Query(),
 				"host":   req.Host,
+				"remote": requestIP,
 			})
 
 		recorder := &responseRecorder{
@@ -32,7 +36,7 @@ func Middleware(next http.Handler) http.Handler {
 			return
 		}
 
-		entry.WithFields(logrus.Fields{
+		entry.WithFields(map[string]interface{}{
 			"statusCode":      recorder.status,
 			"durationSeconds": time.Now().Sub(begin).Seconds(),
 			"begin":           begin.Format(time.RFC3339),
