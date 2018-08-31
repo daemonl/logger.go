@@ -154,9 +154,7 @@ func FromEnvironment() Logger {
 		Writer:    os.Stderr,
 		Formatter: JSONFormatter{},
 	}
-	l := &logger{
-		writers: []LogWriter{stderrWriter},
-	}
+	l := &logger{}
 	if os.Getenv("VERBOSE") == "true" {
 		l.level = DebugLevel
 	}
@@ -183,6 +181,7 @@ func FromEnvironment() Logger {
 			},
 		}
 	}
+	l.writers = []LogWriter{stderrWriter}
 	return l
 }
 
