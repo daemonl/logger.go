@@ -132,6 +132,9 @@ func (l *logger) AddHook(w LogWriter) {
 }
 
 func (l *logger) log(level int, name string, data map[string]interface{}) {
+	if level > l.level {
+		return
+	}
 	for _, writer := range l.writers {
 		writer.Write(level, name, data)
 	}
