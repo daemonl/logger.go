@@ -170,7 +170,7 @@ func FromEnvironment() Logger {
 	case "info":
 		l.level = InfoLevel
 	default:
-		l.level = TrackLevel
+		l.level = InfoLevel
 	}
 
 	switch os.Getenv("LOG_FORMAT") {
