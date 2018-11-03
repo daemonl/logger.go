@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"bufio"
 	"fmt"
 	"net"
 	"net/http"
@@ -54,6 +55,13 @@ type responseRecorder struct {
 func (rr *responseRecorder) WriteHeader(status int) {
 	rr.status = status
 	rr.ResponseWriter.WriteHeader(status)
+}
+
+func (rr *responseRecorder) Hijack() (net.Conn, *bufio.ReadWriter, error) {
+	if hijacker, ok := rr.ResponseWriter.(http.Hijacker); ok {
+		return hijacker.Hijack()
+	}
+	return nil, nil, fmt.Errorf("Response does not support Hijack")
 }
 
 func statusCodeFamily(status int) string {
