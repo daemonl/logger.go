@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"gopkg.ecal.com/logger"
+	"gopkg.daemonl.com/logger"
 )
 
 type Header struct {

@@ -3,7 +3,7 @@ package logger
 import (
 	"context"
 
-	"gopkg.ecal.com/logger/trace"
+	"gopkg.daemonl.com/logger/trace"
 )
 
 var logContextKey = struct{}{}
